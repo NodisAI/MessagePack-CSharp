@@ -120,21 +120,9 @@ public record ResolverRegisterInfo
         }
 
         // Each namespace of the data type also becomes a nesting type of the formatter.
-        if (dataType is QualifiedNamedTypeName { Container: NamespaceTypeContainer { Namespace: string ns } })
+        if (dataType is QualifiedNamedTypeName { Container: NamespaceTypeContainer { Namespace: { } ns } })
         {
-            string[] namespaces = ns.Split('.');
-            QualifiedNamedTypeName? partialClassAsNamespaceStep = resolverOptions.Name;
-            for (int i = 0; i < namespaces.Length; i++)
-            {
-                partialClassAsNamespaceStep = new(TypeKind.Class)
-                {
-                    Name = namespaces[i],
-                    Container = new NestingTypeContainer(partialClassAsNamespaceStep),
-                    AccessModifier = Accessibility.Internal,
-                };
-            }
-
-            return partialClassAsNamespaceStep;
+            return new QualifiedNamedTypeName(TypeKind.Class) { Name = dataType.GetQualifiedName(Qualifiers.None), Container = new NamespaceTypeContainer(ns) };
         }
 
         return resolverOptions.Name;
