@@ -16,6 +16,7 @@ internal static class Constants
     internal const string MessagePackUnionAttributeName = "UnionAttribute";
     internal const string SuppressSourceGenerationPropertyName = "SuppressSourceGeneration";
     internal const string AllowPrivatePropertyName = "AllowPrivate";
+    internal const string OnlyIncludeKeyedMembersName = "OnlyIncludeKeyedMembers";
 
     internal const string IMessagePackFormatterInterfaceNamespace = "MessagePack.Formatters";
     internal const string IMessagePackFormatterInterfaceName = "IMessagePackFormatter";

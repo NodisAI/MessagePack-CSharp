@@ -55,6 +55,20 @@ namespace MessagePack
         /// </para>
         /// </remarks>
         public bool AllowPrivate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to only include members that are marked with the <see cref="KeyAttribute"/> attribute.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Sometimes, a type may have a lot of members, but only a few of them are actually needed for serialization.
+        /// Or it inherits from a base type that we cannot modify.
+        /// </para>
+        /// <para>
+        /// This attribute allows you to specify that only the members marked with the <see cref="KeyAttribute"/> attribute should be included in the serialization.
+        /// </para>
+        /// </remarks>
+        public bool OnlyIncludeKeyedMembers { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]

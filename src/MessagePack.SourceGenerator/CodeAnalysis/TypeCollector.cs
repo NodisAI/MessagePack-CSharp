@@ -727,6 +727,7 @@ public class TypeCollector
         }
 
         bool? allowPrivateAttribute = (bool?)contractAttr?.NamedArguments.FirstOrDefault(kvp => kvp.Key == Constants.AllowPrivatePropertyName).Value.Value;
+        bool? onlyIncludeKeyedMembers = (bool?)contractAttr?.NamedArguments.FirstOrDefault(kvp => kvp.Key == Constants.OnlyIncludeKeyedMembersName).Value.Value;
 
         if (contractAttr is null)
         {
@@ -919,6 +920,13 @@ public class TypeCollector
                     var typeReferencesIgnoreDataMemberAttribute = this.typeReferences.IgnoreDataMemberAttribute;
                     return typeReferencesIgnoreDataMemberAttribute != null && (x.AttributeClass.ApproximatelyEqual(this.typeReferences.IgnoreAttribute) || x.AttributeClass.ApproximatelyEqual(typeReferencesIgnoreDataMemberAttribute));
                 }))
+                {
+                    nonPublicMembersAreSerialized |= (item.DeclaredAccessibility & Accessibility.Public) != Accessibility.Public;
+                    continue;
+                }
+
+                if (onlyIncludeKeyedMembers is true &&
+                    !item.GetAttributes().Any(x => x.AttributeClass.ApproximatelyEqual(this.typeReferences.KeyAttribute)))
                 {
                     nonPublicMembersAreSerialized |= (item.DeclaredAccessibility & Accessibility.Public) != Accessibility.Public;
                     continue;
