@@ -122,7 +122,9 @@ public record ResolverRegisterInfo
         // Each namespace of the data type also becomes a nesting type of the formatter.
         if (dataType is QualifiedNamedTypeName { Container: NamespaceTypeContainer { Namespace: { } ns } })
         {
-            return new QualifiedNamedTypeName(TypeKind.Class) { Name = dataType.GetQualifiedName(Qualifiers.None), Container = new NamespaceTypeContainer(ns) };
+            var type = dataType.Kind == TypeKind.Struct ? TypeKind.Struct : TypeKind.Class;
+            var name = dataType.Kind == TypeKind.Enum ? "__MessagePack__EnumFormatter" : dataType.GetQualifiedName(Qualifiers.None);
+            return new QualifiedNamedTypeName(type, dataType.IsRecord) { Name = name, Container = new NamespaceTypeContainer(ns) };
         }
 
         return resolverOptions.Name;
