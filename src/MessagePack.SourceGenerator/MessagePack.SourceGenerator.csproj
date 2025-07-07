@@ -14,6 +14,11 @@
   <ItemGroup>
     <None Remove="AnalyzerReleases.Shipped.md" />
     <None Remove="AnalyzerReleases.Unshipped.md" />
+    <None Update="Transforms\StringKeyFormatterTemplate.tt">
+      <LastGenOutput>StringKeyFormatterTemplate.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>MessagePack.SourceGenerator.Transforms</CustomToolNamespace>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,11 +50,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ResolverTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Update="Transforms\StringKey\StringKeyFormatterTemplate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>StringKeyFormatterTemplate.tt</DependentUpon>
-    </Compile>
     <Compile Update="Transforms\TemplatePartials.cs">
       <DependentUpon>%(FileName).tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -59,6 +59,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>UnionTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Transforms\StringKeyFormatterTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringKeyFormatterTemplate.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -78,11 +83,6 @@
     <None Update="Transforms\ResolverTemplate.tt">
       <LastGenOutput>ResolverTemplate.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Transforms\StringKey\StringKeyFormatterTemplate.tt">
-      <LastGenOutput>StringKeyFormatterTemplate.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>MessagePack.SourceGenerator.Transforms</CustomToolNamespace>
     </None>
     <None Update="Transforms\UnionTemplate.tt">
       <LastGenOutput>UnionTemplate.cs</LastGenOutput>

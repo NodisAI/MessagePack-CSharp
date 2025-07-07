@@ -1,5 +1,4 @@
 ﻿<#@ template debug="false" hostspecific="false" linePragmas="false" language="C#" #>
-<#@ assembly name="System.Core" #>
 
 using MsgPack = global::MessagePack;
 

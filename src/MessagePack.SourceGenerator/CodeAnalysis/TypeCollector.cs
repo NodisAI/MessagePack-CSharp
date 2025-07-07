@@ -774,8 +774,13 @@ public class TypeCollector
         }
 
         HashSet<Diagnostic> reportedDiagnostics = new();
-        IEnumerable<ISymbol> instanceMembers = formattedType.GetAllMembers()
-            .Where(m => m is IFieldSymbol or IPropertySymbol && !(m.IsStatic || m.IsOverride || m.IsImplicitlyDeclared));
+        var instanceMembers = formattedType.GetAllMembers()
+            .Where(m => m is IFieldSymbol or IPropertySymbol && !(m.IsStatic || m.IsImplicitlyDeclared))
+            .ToList();
+        foreach (var overriddenProperty in instanceMembers.OfType<IPropertySymbol>().Select(p => p.OverriddenProperty).OfType<IPropertySymbol>().ToList())
+        {
+            instanceMembers.Remove(overriddenProperty);
+        }
 
         // The actual member identifiers of each serializable member,
         // such that we'll recognize collisions as we enumerate members in base types
@@ -1240,7 +1245,7 @@ public class TypeCollector
         // struct allows null ctor
         if (ctor is null && isClass)
         {
-            this.reportDiagnostic?.Invoke(Diagnostic.Create(MsgPack00xMessagePackAnalyzer.NoDeserializingConstructor, GetIdentifierLocation(formattedType)));
+            this.reportDiagnostic?.Invoke(Diagnostic.Create(MsgPack00xMessagePackAnalyzer.AotArrayRankTooHigh, GetIdentifierLocation(formattedType)));
             return null;
         }
 
