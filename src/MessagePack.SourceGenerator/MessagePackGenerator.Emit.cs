@@ -3,7 +3,6 @@
 
 using System.Text;
 using MessagePack.SourceGenerator.Transforms;
-using Microsoft.CodeAnalysis;
 
 namespace MessagePack.SourceGenerator;
 
@@ -74,7 +73,7 @@ public partial class MessagePackGenerator
             .. model.EnumInfos,
             .. model.UnionInfos,
             .. model.ObjectInfos,
-            .. model.CustomFormatterInfos.Where(fi => fi.FormattableDataType.IsFormatterInSameAssembly),
+            .. model.CustomFormatterInfos,
         ];
         ResolverTemplate resolverTemplate = new(options, registerInfos);
         sb.Append(FileHeader);

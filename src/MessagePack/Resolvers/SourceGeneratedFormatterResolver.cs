@@ -1,6 +1,7 @@
 // Copyright (c) All contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +20,37 @@ namespace MessagePack.Resolvers
         /// </summary>
         public static readonly SourceGeneratedFormatterResolver Instance = new();
 
-        private static readonly ConcurrentDictionary<Assembly, IFormatterResolver?> AssemblyResolverCache = new();
+        private static readonly ConcurrentBag<IFormatterResolver?> AssemblyResolvers = new();
+
+        static SourceGeneratedFormatterResolver()
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                TryAddResolver(assembly);
+            }
+
+            AppDomain.CurrentDomain.AssemblyLoad += (_, e) =>
+            {
+                TryAddResolver(e.LoadedAssembly);
+            };
+
+            static void TryAddResolver(Assembly assembly)
+            {
+                try
+                {
+                    if (assembly.GetCustomAttributes<GeneratedAssemblyMessagePackResolverAttribute>().FirstOrDefault() is { } att &&
+                        att.ResolverType.GetField("Instance", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) is IFormatterResolver
+                            resolver)
+                    {
+                        AssemblyResolvers.Add(resolver);
+                    }
+                }
+                catch
+                {
+                    // Ignore
+                }
+            }
+        }
 
         private SourceGeneratedFormatterResolver()
         {
@@ -34,17 +65,15 @@ namespace MessagePack.Resolvers
 
             private static IMessagePackFormatter<T>? FindPrecompiledFormatter()
             {
-                IFormatterResolver? resolver = AssemblyResolverCache.GetOrAdd(typeof(T).Assembly, static assembly =>
+                foreach (var resolver in AssemblyResolvers)
                 {
-                    if (typeof(T).Assembly.GetCustomAttributes<GeneratedAssemblyMessagePackResolverAttribute>().FirstOrDefault() is { } att)
+                    if (resolver?.GetFormatter<T>() is { } f)
                     {
-                        return (IFormatterResolver?)att.ResolverType.GetField("Instance", BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
+                        return f;
                     }
+                }
 
-                    return null;
-                });
-
-                return resolver?.GetFormatter<T>();
+                return null;
             }
         }
     }
