@@ -229,22 +229,24 @@ public record QualifiedNamedTypeName : QualifiedTypeName, IComparable<QualifiedN
         }
 
         builder.Append(this.Name);
-        builder.Append(this.GetTypeParametersOrArgs(genericStyle));
+        builder.Append(this.GetTypeParametersOrArgs(genericStyle, includeNullableAnnotation));
 
         if (includeNullableAnnotation && this.ReferenceTypeNullableAnnotation == NullableAnnotation.Annotated)
         {
-            builder.Append("?");
+            builder.Append('?');
         }
 
         return builder.ToString();
     }
 
-    public override string GetTypeParametersOrArgs(GenericParameterStyle style)
+    public override string GetTypeParametersOrArgs(GenericParameterStyle style) => this.GetTypeParametersOrArgs(style, true);
+
+    private string GetTypeParametersOrArgs(GenericParameterStyle style, bool includeNullableAnnotation)
     {
         return style switch
         {
             GenericParameterStyle.Identifiers when !this.TypeParameters.IsEmpty => $"<{string.Join(", ", this.TypeParameters.Select(tp => tp.Name))}>",
-            GenericParameterStyle.Arguments when !this.TypeArguments.IsEmpty => $"<{string.Join(", ", this.TypeArguments.Select(ta => ta.GetQualifiedName(genericStyle: GenericParameterStyle.Arguments, includeNullableAnnotation: true)))}>",
+            GenericParameterStyle.Arguments when !this.TypeArguments.IsEmpty => $"<{string.Join(", ", this.TypeArguments.Select(ta => ta.GetQualifiedName(genericStyle: GenericParameterStyle.Arguments, includeNullableAnnotation: includeNullableAnnotation)))}>",
             GenericParameterStyle.TypeDefinition when this.Arity > 0 => $"<{new string(',', this.Arity - 1)}>",
             GenericParameterStyle.ArityOnly when this.Arity > 0 => $"`{this.Arity}",
             _ => string.Empty,
