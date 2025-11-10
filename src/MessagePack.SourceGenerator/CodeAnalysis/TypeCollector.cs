@@ -238,6 +238,7 @@ public class TypeCollector
     private readonly ImmutableSortedSet<ResolverRegisterInfo>.Builder collectedArrayInfo = ImmutableSortedSet.CreateBuilder<ResolverRegisterInfo>(ResolverRegisterInfoComparer.Default);
 
     private readonly Compilation compilation;
+    private readonly IAssemblySymbol targetAssembly;
 
     private readonly CancellationToken cancellationToken;
 
@@ -247,6 +248,7 @@ public class TypeCollector
         this.reportDiagnostic = reportAnalyzerDiagnostic;
         this.options = options;
         this.compilation = compilation;
+        this.targetAssembly = compilation.Assembly;
         this.cancellationToken = cancellationToken;
 
         bool isInaccessible = false;
@@ -316,6 +318,12 @@ public class TypeCollector
         this.cancellationToken.ThrowIfCancellationRequested();
 
         if (!this.alreadyCollected.Add(typeSymbol))
+        {
+            return;
+        }
+
+        // If the type is not in the same assembly as the caller, we cannot generate a formatter for it.
+        if (!SymbolEqualityComparer.Default.Equals(this.targetAssembly, typeSymbol.ContainingAssembly))
         {
             return;
         }
@@ -1430,7 +1438,6 @@ public class TypeCollector
             }
         }
 
-        INamedTypeSymbol? formattedTypeDefinition = formattedType.IsGenericType ? formattedType.ConstructUnboundGenericType() : null;
         ObjectSerializationInfo info = ObjectSerializationInfo.Create(
             formattedType,
             isClass: isClass,
