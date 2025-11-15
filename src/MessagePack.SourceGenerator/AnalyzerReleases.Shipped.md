@@ -13,7 +13,7 @@ MsgPack003 | Usage | Error | MsgPack00xMessagePackAnalyzer
 MsgPack004 | Usage | Error | Member needs Key or IgnoreMember attribute
 MsgPack005 | Usage | Error | MsgPack00xMessagePackAnalyzer
 
-## Release 2.3.73-alpha
+## Release 2.3.73
 
 ### New Rules
 
@@ -21,7 +21,7 @@ Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 MsgPack006 | Usage | Error | MsgPack00xMessagePackAnalyzer
 
-## Release 2.6.95-alpha
+## Release 2.6.95
 
 ### New Rules
 
@@ -30,7 +30,7 @@ Rule ID | Category | Severity | Notes
 MsgPack007 | Usage | Error | MsgPack00xMessagePackAnalyzer
 MsgPack008 | Usage | Error | MsgPack00xMessagePackAnalyzer
 
-## Release 3.0.54-alpha
+## Release 3.0.54
 
 ### New Rules
 Rule ID | Category | Severity | Notes
@@ -40,14 +40,14 @@ MsgPack010 | Usage | Warning | Formatter is not accessible to the source generat
 MsgPack011 | Usage | Error | MsgPack00xMessagePackAnalyzer
 MsgPack012 | Usage | Error | MsgPack00xMessagePackAnalyzer
 
-## Release 3.0.129-beta
+## Release 3.0.129
 
 ### New Rules
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 MsgPack013 | Usage | Warning | Formatter has no accessible instance for the source generated resolver
 
-## Release 3.0.208-rc.1
+## Release 3.0.208
 
 ### New Rules
 

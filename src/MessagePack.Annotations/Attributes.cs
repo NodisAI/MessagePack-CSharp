@@ -126,7 +126,7 @@ namespace MessagePack
         public UnionAttribute(int key, string subType)
         {
             this.Key = key;
-            this.SubType = Type.GetType(subType, throwOnError: true);
+            this.SubType = Type.GetType(subType, throwOnError: true)!;
         }
     }
 
